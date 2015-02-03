@@ -1,4 +1,9 @@
 //Part 1
+
+//////////////
+// FoodItem //
+//////////////
+
 var FoodItem = function(name, calories, vegan, glutenFree, citrusFree) {
     this.name = name;
     this.calories = calories;
@@ -15,6 +20,53 @@ FoodItem.prototype.toString = function() {
             "\nCitrus Free?: " + this.citrusFree;
 };
 
+FoodItem.prototype.create = function() {
+
+    // var vegan = this.vegan ? "Vegan" : "";
+    // var glutenFree = this.glutenFree ? "GF" : "";
+    // var citrusFree = this.citrusFree ? "CF" : "";
+    return $('<li>' + this.name + '</li>' );
+
+};
+
+
+
+/////////////////////
+// Drinks & Plates //
+/////////////////////
+
+
+var toStringItem = function(item){
+    return item.toString() + "\n";
+};
+
+var mapToString = function(arr){
+    return _.map(arr,toStringItem);
+};
+
+var getTotalCals = function(arr){
+    return _.reduce(arr,function(total, ing){
+        return total + ing.calories;
+    }, 0);
+};
+
+var totallyFreeOf = function(arr,dietPref){
+    for (var i = 0; i < arr.length; i++){
+        if(arr[i][dietPref] === false){
+            return false;
+        }
+    }
+    return true;
+
+};
+
+var createItem = function(item){
+    return item.create();
+};
+
+var mapCreate = function(arr){
+    return _.map(arr,createItem);
+};
 
 
 var Drink = function(name, description, price, ingredients){
@@ -23,20 +75,6 @@ var Drink = function(name, description, price, ingredients){
     this.price = price;
     this.ingredients = ingredients;
 };
-
-var toStringItem = function(item){
-    return item.toString() + "\n";
-}
-
-var mapToString = function(arr){
-    return _.map(arr,toStringItem);
-}
-
-// var mapToString = function(arr){
-//     return _.map(arr,function(arrItem){
-//         return arrItem.toString() + "\n";
-//     })
-// }
 
 Drink.prototype.toString = function() {
 
@@ -48,12 +86,39 @@ Drink.prototype.toString = function() {
 };
 
 
+Drink.prototype.create = function(){
+
+    var isGF, isCF, isV;
+
+    isGF = totallyFreeOf(this.ingredients,"glutenFree") ? " GF" : "";
+    isV = totallyFreeOf(this.ingredients,"vegan") ? " V" : "";
+    isCF = totallyFreeOf(this.ingredients,"citrusFree") ? " CF" : "";
+
+    var drinkEl = $('<div>')
+        .addClass('plate')
+        .append('<h3>' + this.name + '</h3>')
+        .append(mapCreate(this.ingredients))
+        .append('(')
+        .append(getTotalCals(this.ingredients) + ' kcals')
+        .append(isV)
+        .append(isGF)
+        .append(isCF)
+        .append(')');
+
+    return drinkEl;
+
+};
+
+
+
+
 var Plate = function(name, description, price, ingredients){
     this.name = name;
     this.description = description;
     this.price = price;
     this.ingredients = ingredients;
 };
+
 
 Plate.prototype.toString = function() {
     return "Name: " + this.name +
@@ -97,26 +162,63 @@ Plate.prototype.isCitrusFree = function(){
 
 };
 
+Plate.prototype.create = function(){
 
+    var isGF, isCF, isV;
+
+    isGF = totallyFreeOf(this.ingredients,"glutenFree") ? " GF" : "";
+    isV = totallyFreeOf(this.ingredients,"vegan") ? " V" : "";
+    isCF = totallyFreeOf(this.ingredients,"citrusFree") ? " CF" : "";
+
+    var plateEl = $('<div>')
+        .addClass('plate')
+        .append('<h3>' + this.name + '</h3>')
+        .append(mapCreate(this.ingredients))
+        .append('(')
+        .append(getTotalCals(this.ingredients) + ' kcals')
+        .append(isV)
+        .append(isGF)
+        .append(isCF)
+        .append(')');
+
+    return plateEl;
+
+};
 
 
 var Order = function(plates){
     this.plates = plates;
-}
+};
 
 
 Order.prototype.toString = function(){
     return "Order: " + mapToString(this.plates);
-}
+};
+
+///////////
+// Menus //
+///////////
 
 var Menu = function(plates){
     this.plates = plates;
-}
+};
 
 
 Menu.prototype.toString = function(){
     return "Menu: " + mapToString(this.plates);
-}
+};
+
+Menu.prototype.create = function(){
+    var menuEl = $('<div>')
+        .addClass('menu')
+        .append(mapCreate(this.plates));
+
+    return menuEl;
+};
+
+////////////////
+// Restaurant //
+////////////////
 
 var Restaurant = function(name, description, menu){
     this.name = name;
@@ -129,7 +231,17 @@ Restaurant.prototype.toString = function(){
             "\nDescription: " + this.description +
             "\n" + "Menu: \n" +
             mapToString(this.menu);
-}
+};
+
+Restaurant.prototype.create = function(){
+    var restaurantEl = $('<div>')
+        .addClass('restaurant')
+        .append('<h1>' + this.name + '</h1>')
+        .append('<span class="descrip">' + this.description + '</span>')
+        .append(this.menu.create());
+
+    return restaurantEl;
+};
 
 var Customer = function(dietPref){
     this.dietPref = dietPref;
@@ -137,7 +249,7 @@ var Customer = function(dietPref){
 
 Customer.prototype.toString = function(){
     return "Diet Preference: " + this.dietPref;
-}
+};
 
 // Instances
 
@@ -172,6 +284,8 @@ var mexicanMenu = new Menu([burrito, guacamoleApp, margarita]);
 var joses = new Restaurant("Jose's", "Jose's tasty mexican food", mexicanMenu);
 
 console.log(joses.toString());
+
+
 
 
 // var tastyDrink = new Drink("Tasty Drink", "This is a tasty Drink", 2, [spinach]);
@@ -211,5 +325,7 @@ console.log(joses.toString());
 
 
 $(document).on('ready', function() {
+
+    $('body').append(joses.create());
 
 });
