@@ -355,17 +355,8 @@ $(document).on('ready', function() {
         $('.plate').removeClass('highlight');
         
         var preferences = "";
-        preferences = dietPreferences.join();
-
-        console.log(preferences);
-        console.log($('.plate').each(hasClass(preferences));
-
-        $('.plate').is(preferences);
-
-        // .addClass('highlight');
-
-
-        
+        preferences = dietPreferences.join("");
+        $('.plate').filter(preferences).addClass('highlight');
 
     };
 
@@ -375,13 +366,13 @@ $(document).on('ready', function() {
         dietPreferences = [];
 
         if($('.vegan:checked').length > 0){
-            dietPreferences.push('V');
+            dietPreferences.push('.V');
         }
         if($('.gf:checked').length > 0){
-            dietPreferences.push('gf');
+            dietPreferences.push('.gf');
         }
         if($('.cf:checked').length > 0){
-            dietPreferences.push('cf');
+            dietPreferences.push('.cf');
         }
 
         updateHighlight();
