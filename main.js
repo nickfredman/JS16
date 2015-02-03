@@ -96,14 +96,17 @@ Drink.prototype.create = function(){
 
     var drinkEl = $('<div>')
         .addClass('plate')
-        .append('<h3>' + this.name + '</h3>')
-        .append(mapCreate(this.ingredients))
+        .append('<h3 class="plate-name">' + this.name + "</h3>" + "<span> - $</span>" + '<h3 class="plate-price">' + this.price + '</h3>')        .append(mapCreate(this.ingredients))
         .append('(')
         .append(getTotalCals(this.ingredients) + ' kcals')
         .append(isV)
         .append(isGF)
         .append(isCF)
         .append(')');
+
+    if(isGF) {drinkEl.addClass('gf')};
+    if(isV) {drinkEl.addClass('V')};
+    if(isCF) {drinkEl.addclass('CF')};
 
     return drinkEl;
 
@@ -172,7 +175,7 @@ Plate.prototype.create = function(){
 
     var plateEl = $('<div>')
         .addClass('plate')
-        .append('<h3>' + this.name + '</h3>')
+        .append('<h3 class="plate-name">' + this.name + "</h3>" + "<span> - $</span>" + '<h3 class="plate-price">' + this.price + '</h3>')
         .append(mapCreate(this.ingredients))
         .append('(')
         .append(getTotalCals(this.ingredients) + ' kcals')
@@ -180,6 +183,10 @@ Plate.prototype.create = function(){
         .append(isGF)
         .append(isCF)
         .append(')');
+
+    if(isGF) {plateEl.addClass('gf')};
+    if(isV) {plateEl.addClass('V')};
+    if(isCF) {plateEl.addclass('CF')};
 
     return plateEl;
 
@@ -238,6 +245,7 @@ Restaurant.prototype.create = function(){
         .addClass('restaurant')
         .append('<h1>' + this.name + '</h1>')
         .append('<span class="descrip">' + this.description + '</span>')
+        .append('<p>Click any item to add to your order</p>')
         .append(this.menu.create());
 
     return restaurantEl;
@@ -325,7 +333,60 @@ console.log(joses.toString());
 
 
 $(document).on('ready', function() {
+    var $totalPrice = 0;
+
+    var dietPreferences = [];
 
     $('body').append(joses.create());
+
+    $('.plate').on('click', function() {
+        var $name = $('<span>').addClass('order-item-name').append($(this).find('.plate-name').text());
+        var $price = $('<span>').addClass('order-item-price').append($(this).find('.plate-price').text());
+        var $div = $('<div>')
+        .append($name)
+        .append('<span> - $</span>')
+        .append($price);
+        $('.ordered-items').append($div);
+        $totalPrice += Number($(this).find('.plate-price').text());
+        $('.total-price').text('$' + $totalPrice);
+    });
+
+    var updateHighlight = function(){
+        $('.plate').removeClass('highlight');
+        
+        var preferences = "";
+        preferences = dietPreferences.join();
+
+        console.log(preferences);
+        console.log($('.plate').each(hasClass(preferences));
+
+        $('.plate').is(preferences);
+
+        // .addClass('highlight');
+
+
+        
+
+    };
+
+    // Check for updates to the diet preferences
+
+    $(':checkbox').on('click',function(){
+        dietPreferences = [];
+
+        if($('.vegan:checked').length > 0){
+            dietPreferences.push('V');
+        }
+        if($('.gf:checked').length > 0){
+            dietPreferences.push('gf');
+        }
+        if($('.cf:checked').length > 0){
+            dietPreferences.push('cf');
+        }
+
+        updateHighlight();
+    });
+
+
 
 });

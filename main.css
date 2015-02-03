@@ -1,0 +1,19 @@
+* {
+  box-sizing: border-box;
+}
+
+.restaurant-wrapper{
+  width: auto;
+  float: left;
+}
+
+.order-wrapper{
+  width: 300px;
+  float: right;
+  background-color: #a8aec0;
+}
+
+.highlight {
+
+  border: 1px solid red;
+}
