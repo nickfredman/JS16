@@ -106,7 +106,7 @@ Drink.prototype.create = function(){
 
     if(isGF) {drinkEl.addClass('gf')};
     if(isV) {drinkEl.addClass('V')};
-    if(isCF) {drinkEl.addclass('CF')};
+    if(isCF) { drinkEl.addClass('CF')};
 
     return drinkEl;
 
@@ -186,7 +186,7 @@ Plate.prototype.create = function(){
 
     if(isGF) {plateEl.addClass('gf')};
     if(isV) {plateEl.addClass('V')};
-    if(isCF) {plateEl.addclass('CF')};
+    if(isCF) {plateEl.addClass('CF')};
 
     return plateEl;
 
@@ -243,9 +243,9 @@ Restaurant.prototype.toString = function(){
 Restaurant.prototype.create = function(){
     var restaurantEl = $('<div>')
         .addClass('restaurant')
-        .append('<h1>' + this.name + '</h1>')
-        .append('<span class="descrip">' + this.description + '</span>')
-        .append('<p>Click any item to add to your order</p>')
+        // .append('<h1>' + this.name + '</h1>')
+        // .append('<span class="descrip">' + this.description + '</span>')
+        // .append('<p>Click any item to add to your order</p>')
         .append(this.menu.create());
 
     return restaurantEl;
@@ -261,6 +261,10 @@ Customer.prototype.toString = function(){
 
 // Instances
 
+var lime = new FoodItem("lime", 0, true, true, false);
+
+var fish = new FoodItem("fish", 150, false, true, true); 
+
 var bread = new FoodItem("bread", 200, false, false, true);
 
 var chicken = new FoodItem("chicken", 130, false, true, true);
@@ -269,9 +273,15 @@ var spinach = new FoodItem("spinach", 50, true, true, true);
 
 var guacamole = new FoodItem("guacamole", 100, true, true, false);
 
+var cheese = new FoodItem("cheese", 100, false, true, true);
+
 var beans = new FoodItem("beans", 200, true, true, true);
 
 var tortilla = new FoodItem("tortilla", 150, true, false, true);
+
+var chips = new FoodItem("tortilla chips", 150, true, false, true);
+
+var tacos = new FoodItem("corn tacos", 200, true, true, true);
 
 var tomatoes = new FoodItem("tomatoes", 50, true, true, true);
 
@@ -279,15 +289,25 @@ var rice = new FoodItem("rice", 125, true, true, true);
 
 var tequila = new FoodItem("tequila", 150, true, true, true);
 
+var beer = new FoodItem("cervesca", 150, true, false, true);
+
 var margaritaMix = new FoodItem("margarita mix", 250, true, true, false);
 
-var burrito = new Plate("Burrito", "This is a tasty burrito", 5, [chicken, spinach, guacamole, beans, tortilla, tomatoes, rice]);
+var burrito = new Plate("Chicken Burrito", "This is a tasty burrito", 5, [chicken, cheese, spinach, guacamole, beans, tortilla, tomatoes, rice]);
+
+var veganburrito = new Plate("Vegan Burrito", "This is vegan, probably not tasty", 6, [spinach, guacamole, rice, tortilla, tomatoes, beans]);
 
 var guacamoleApp = new Plate("Guacamole Appetizer", "This is some tasty guacamoles", 4, [guacamole, tomatoes]);
 
+var fishTacos = new Plate("Fish tacos", "Fish in Colorado! Not suspicious.", 7, [fish, tacos, lime, tomatoes, cheese]);
+
+var nachos = new Plate("Nachos", "Mmmmmmmmmmmm", 3, [cheese, chips, tomatoes, beans, guacamole]);
+
+var dosEquis = new Drink("XX", "Mmmmmmm, refreshing", 3, [beer]);
+
 var margarita = new Drink("Margarita", "This is a damn tasty Marg", 3, [tequila, margaritaMix]);
 
-var mexicanMenu = new Menu([burrito, guacamoleApp, margarita]);
+var mexicanMenu = new Menu([guacamoleApp, nachos, burrito, fishTacos, veganburrito,  dosEquis, margarita]);
 
 var joses = new Restaurant("Jose's", "Jose's tasty mexican food", mexicanMenu);
 
@@ -337,7 +357,12 @@ $(document).on('ready', function() {
 
     var dietPreferences = [];
 
-    $('body').append(joses.create());
+    console.log(joses.name);
+    $('.restaurant-info').append('<h1>'+joses.name+'</h1>')
+                        .append('<span class="descrip">' + joses.description + '</span>')
+                        .append('<p>Click any item to add to your order</p>');
+
+    $('.restaurant-wrapper').append(joses.create());
 
     $('.plate').on('click', function() {
         var $name = $('<span>').addClass('order-item-name').append($(this).find('.plate-name').text());
