@@ -69,11 +69,12 @@ var mapCreate = function(arr){
 };
 
 
-var Drink = function(name, description, price, ingredients){
+var Drink = function(name, description, price, ingredients, imageUrl){
     this.name = name;
     this.description = description;
     this.price = price;
     this.ingredients = ingredients;
+    this.imageUrl = imageUrl;
 };
 
 Drink.prototype.toString = function() {
@@ -96,6 +97,7 @@ Drink.prototype.create = function(){
 
     var drinkEl = $('<div>')
         .addClass('plate')
+        .css('background-image', 'url('+ this.imageUrl +')')
         .append('<h3 class="plate-name">' + this.name + "</h3>" + "<span> - $</span>" + '<h3 class="plate-price">' + this.price + '</h3>')        .append(mapCreate(this.ingredients))
         .append('(')
         .append(getTotalCals(this.ingredients) + ' kcals')
@@ -106,7 +108,7 @@ Drink.prototype.create = function(){
 
     if(isGF) {drinkEl.addClass('gf')};
     if(isV) {drinkEl.addClass('V')};
-    if(isCF) { drinkEl.addClass('CF')};
+    if(isCF) { drinkEl.addClass('cf')};
 
     return drinkEl;
 
@@ -115,11 +117,12 @@ Drink.prototype.create = function(){
 
 
 
-var Plate = function(name, description, price, ingredients){
+var Plate = function(name, description, price, ingredients, imageUrl){
     this.name = name;
     this.description = description;
     this.price = price;
     this.ingredients = ingredients;
+    this.imageUrl = imageUrl;
 };
 
 
@@ -175,6 +178,7 @@ Plate.prototype.create = function(){
 
     var plateEl = $('<div>')
         .addClass('plate')
+        .css('background-image', 'url('+ this.imageUrl +')')
         .append('<h3 class="plate-name">' + this.name + "</h3>" + "<span> - $</span>" + '<h3 class="plate-price">' + this.price + '</h3>')
         .append(mapCreate(this.ingredients))
         .append('(')
@@ -186,7 +190,7 @@ Plate.prototype.create = function(){
 
     if(isGF) {plateEl.addClass('gf')};
     if(isV) {plateEl.addClass('V')};
-    if(isCF) {plateEl.addClass('CF')};
+    if(isCF) {plateEl.addClass('cf')};
 
     return plateEl;
 
@@ -293,19 +297,19 @@ var beer = new FoodItem("cervesca", 150, true, false, true);
 
 var margaritaMix = new FoodItem("margarita mix", 250, true, true, false);
 
-var burrito = new Plate("Chicken Burrito", "This is a tasty burrito", 5, [chicken, cheese, spinach, guacamole, beans, tortilla, tomatoes, rice]);
+var burrito = new Plate("Chicken Burrito", "This is a tasty burrito", 7, [chicken, cheese, spinach, guacamole, beans, tortilla, tomatoes, rice], 'chickenburrito_dark.jpg');
 
-var veganburrito = new Plate("Vegan Burrito", "This is vegan, probably not tasty", 6, [spinach, guacamole, rice, tortilla, tomatoes, beans]);
+var veganburrito = new Plate("Vegan Burrito", "This is vegan, probably not tasty", 6, [spinach, guacamole, rice, tortilla, tomatoes, beans], 'veggieburrito_dark.jpg');
 
-var guacamoleApp = new Plate("Guacamole Appetizer", "This is some tasty guacamoles", 4, [guacamole, tomatoes]);
+var guacamoleApp = new Plate("Guacamole Appetizer", "This is some tasty guacamoles", 4, [guacamole, tomatoes], 'guacamole_dark.jpg');
 
-var fishTacos = new Plate("Fish tacos", "Fish in Colorado! Not suspicious.", 7, [fish, tacos, lime, tomatoes, cheese]);
+var fishTacos = new Plate("Fish tacos", "Fish in Colorado! Not suspicious.", 6, [fish, tacos, lime, tomatoes, cheese], 'fishtacos_dark.jpg');
 
-var nachos = new Plate("Nachos", "Mmmmmmmmmmmm", 3, [cheese, chips, tomatoes, beans, guacamole]);
+var nachos = new Plate("Nachos", "Mmmmmmmmmmmm", 6, [cheese, chips, tomatoes, beans, guacamole],'nachos_dark.jpg');
 
-var dosEquis = new Drink("XX", "Mmmmmmm, refreshing", 3, [beer]);
+var dosEquis = new Drink("XX", "Mmmmmmm, refreshing", 3, [beer], "dosequis_dark.jpg");
 
-var margarita = new Drink("Margarita", "This is a damn tasty Marg", 3, [tequila, margaritaMix]);
+var margarita = new Drink("Margarita", "This is a damn tasty Marg", 5, [tequila, margaritaMix], "marg_dark.jpg");
 
 var mexicanMenu = new Menu([guacamoleApp, nachos, burrito, fishTacos, veganburrito,  dosEquis, margarita]);
 
@@ -368,6 +372,7 @@ $(document).on('ready', function() {
         var $name = $('<span>').addClass('order-item-name').append($(this).find('.plate-name').text());
         var $price = $('<span>').addClass('order-item-price').append($(this).find('.plate-price').text());
         var $div = $('<div>')
+        .addClass('individual-item')
         .append($name)
         .append('<span> - $</span>')
         .append($price);
@@ -402,7 +407,13 @@ $(document).on('ready', function() {
 
         updateHighlight();
     });
+    $(document).on('click', '.individual-item', function(){
+        console.log("hi");
+        $totalPrice -= Number($(this).find('.order-item-price').text());
+        $('.total-price').text('$' + $totalPrice);
+        $(this).remove();
 
+    });
 
 
 });

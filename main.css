@@ -59,16 +59,26 @@ body {
 
 /* Plates*/
 
-
 .plate {
-  border: 1px solid black;
+  border-radius: 5px;
   padding: 1rem;
   display: inline-block;
   margin: 10px;
   width: 300px;
   min-height: 250px;
   float: left;
+  background-size: cover;
+  text-align: center;
+  color: #fff;
+  transition: all .2s ease-in-out;
+}
 
+.plate:hover{
+  transform: scale(1.03);
+}
+
+.plate:active{
+  transform: scale(1.06);
 }
 
 .plate h3, span {
@@ -76,10 +86,27 @@ body {
 
 }
 
+.individual-item {
+  padding-left: 20px;
+  background: url('del.png') no-repeat;
+  background-size: 16px;
+  background-position: center left;
+  transition: all .1s ease-in-out;
+}
+
+.individual-item:hover{
+  transform: scale(1.02);
+}
+
+.individual-item:active{
+  transform: scale(1.04);
+}
+
+
+
 
 /* STYLINGS */
 
 .highlight {
-
-  border: 1px solid red;
+  color: lightgreen;
 }
